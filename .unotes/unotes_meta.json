@@ -1,0 +1,22 @@
+{
+  "name": "",
+  "isOrdered": true,
+  "folders": {
+    "amq-jms-client": {
+      "name": "amq-jms-client",
+      "isOrdered": true,
+      "folders": {
+        "src": {
+          "name": "src",
+          "isOrdered": true,
+          "folders": {},
+          "files": {}
+        }
+      },
+      "files": {}
+    }
+  },
+  "files": {
+    "README": 0
+  }
+}
