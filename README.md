@@ -108,7 +108,7 @@ oc rsh ex-aao-ss-0
 ```
 * Why can't you use localhost if you're already remoted into the pod?  Becuase AMQ is not listenting on 172.0.0.1 or 0.0.0.0.
 
-You should see the following output.
+  You should see the following output.
 
 ```
 Connection brokerURL = tcp://10.131.0.3:61616
@@ -117,5 +117,18 @@ Producer ActiveMQQueue[TEST], thread=0 Produced: 1000 messages
 Producer ActiveMQQueue[TEST], thread=0 Elapsed time in second : 3 s
 Producer ActiveMQQueue[TEST], thread=0 Elapsed time in milli second : 3410 milli seconds
 ```
+  Check to make sure that the 1000 messages are actaully in the queue.
+```
+/opt/amq/bin/artemis queue stat --url tcp://10.131.0.3:61616
+```
 
-
+  You should get the following
+```
+|NAME                     |ADDRESS                  |CONSUMER_COUNT|MESSAGE_COUNT|MESSAGES_ADDED|DELIVERING_COUNT|MESSAGES_ACKED|SCHEDULED_COUNT|ROUTING_TYPE|
+|$.artemis.internal.sf....|$.artemis.internal.sf....|1             |0            |0             |0               |0             |0              |MULTICAST   |
+|DLQ                      |DLQ                      |0             |0            |0             |0               |0             |0              |ANYCAST     |
+|ExpiryQueue              |ExpiryQueue              |0             |0            |0             |0               |0             |0              |ANYCAST     |
+|TEST                     |TEST                     |0             |1000         |1000          |0               |0             |0              |ANYCAST     |
+|activemq.management.6d...|activemq.management.6d...|1             |0            |0             |0               |0             |0              |MULTICAST   |
+|notif.19e35e81-f422-11...|activemq.notifications   |1             |0            |11            |0               |11            |0              |MULTICAST   |
+```
