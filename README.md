@@ -110,10 +110,9 @@ oc rsh ex-aao-ss-0
 
 You should see the following output.
 
+```
 Connection brokerURL = tcp://10.131.0.3:61616
 Producer ActiveMQQueue[TEST], thread=0 Started to calculate elapsed time ...
-
-```
 Producer ActiveMQQueue[TEST], thread=0 Produced: 1000 messages
 Producer ActiveMQQueue[TEST], thread=0 Elapsed time in second : 3 s
 Producer ActiveMQQueue[TEST], thread=0 Elapsed time in milli second : 3410 milli seconds
