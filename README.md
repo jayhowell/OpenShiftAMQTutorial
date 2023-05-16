@@ -21,7 +21,7 @@ Description: This Doc will walk you through
 ```
     oc create secret generic amq7brokersecret --from-file=broker.ks=/home/jhowell/broker.ks --from-file=client.ts=/home/jhowell/broker.ks --from-literal=keyStorePassword=password --from-literal=trustStorePassword=password
 ```
-or if you already have a .crt and .key file created...        
+  or if you already have a .crt and .key file created...        
 ```
     oc create secret tls amq7brokersecret --cert=</path/to/cert.crt> --key=</path/to/cert.key>
 ```
@@ -36,7 +36,7 @@ or if you already have a .crt and .key file created...
     AMQ Operaor 7.11 and above
 
     ```
-    oc secrets link sa/amq-broker-operator secret/amq7brokersecret<FIX THIS - the name changed in the 7.11 operator>
+    oc secrets link sa/amq-broker-controller-manager secret/amq7brokersecret
     ```
 6. Go to the operator and create the broker. When creating the broker, go to the YAML section and use this YAML
 
@@ -89,16 +89,34 @@ You should see the following output
 
 ```
 NAME                                             READY   STATUS    RESTARTS   AGE     IP            NODE                                        NOMINATED NODE   READINESS GATES
-amq-broker-controller-manager-5c879dc7dc-2pwlr   1/1     Running   0          4m45s   10.131.0.11   ip-10-0-193-77.us-east-2.compute.internal   <none>           <none>
 ex-aao-ss-0                                      1/1     Running   0          3m26s   10.131.0.12   ip-10-0-193-77.us-east-2.compute.internal   <none>           <none>
 ex-aao-ss-1                                      1/1     Running   0          21s     10.131.0.13   ip-10-0-193-77.us-east-2.compute.internal   <none>           <none>
 ```
 
-1. Information before testing the broker.
+* Information before testing the broker.
     * The default core protocol is running on port 61616.
     * 61616 is the port that we will test the internal implementation of Artimus using the Artimus consumer and producer utilities.
     * port 61616 is meant to be an internal element and is how broker to broker communications happen.
     * There is no default route created for this internal channel.
-    * There is a service called "\<broker-service-name>-hdls-svc" that is used internally and can route to any of the broker pods using a Pod S. In this case our service is called "[ex-aao-hdls-svc](https://console-openshift-console.apps.cluster-kmtwq.kmtwq.sandbox2150.opentlc.com/k8s/ns/default/services/ex-aao-hdls-svc)"
-    * The acceptor that we configured above is on port 5672 and automatically has an external route created for it. 
-    * 
+    * There is a service called "\<broker-service-name>-hdls-svc" that is used internally and can route to any of the broker pods using a Pod S. In this case our service is called "ex-aao-hdls-svc"
+    * The acceptor that we configured above is on port 5672 and automatically has an external route created for it.
+
+1.  First lets test the builtin acceptor at port 61616 by remoting into a pod and testing it. Use one of the pod addresses we received above. We'll use pod 1 at 10.131.0.12
+```
+oc rsh ex-aao-ss-0
+/opt/amq/bin/artemis producer --url tcp://10.131.0.12:61616 --user admin --password admin
+```
+* Why can't you use localhost if you're already remoted into the pod?  Becuase AMQ is not listenting on 172.0.0.1 or 0.0.0.0.
+
+You should see the following output.
+
+Connection brokerURL = tcp://10.131.0.3:61616
+Producer ActiveMQQueue[TEST], thread=0 Started to calculate elapsed time ...
+
+```
+Producer ActiveMQQueue[TEST], thread=0 Produced: 1000 messages
+Producer ActiveMQQueue[TEST], thread=0 Elapsed time in second : 3 s
+Producer ActiveMQQueue[TEST], thread=0 Elapsed time in milli second : 3410 milli seconds
+```
+
+
