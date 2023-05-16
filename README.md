@@ -10,9 +10,9 @@ Description: This Doc will walk you through
 
 1. Go to Operators and chose the operator
 
-2\. Create AMQ server from Broker in the namespace/project you want it in\. In this example\, I've just let it be in the default project\.
+2. Create AMQ server from Broker in the namespace/project you want it in. In this example, I've just let it be in the default project.
 
-3. Create a self signed cert using the following commands in RHEL
+3. Create a self signed cert using the following commands in RHEL.  When you use keytool, it will ask you for information including password.  In the examples below, I've used "password" as the password. All other fields can be what ever you like. 
 
     ```
     keytool -genkey -alias broker -keyalg RSA -keystore ./broker.ks
@@ -24,6 +24,12 @@ Description: This Doc will walk you through
     ```
     oc create secret generic amq7brokersecret --from-file=broker.ks=/home/jhowell/broker.ks --from-file=client.ts=/home/jhowell/broker.ks --from-literal=keyStorePassword=password --from-literal=trustStorePassword=password
     ```
+or if you already have a .crt and .key file created...
+
+    ```
+    oc create secret tls amq7brokersecret --cert=</path/to/cert.crt> --key=</path/to/cert.key>
+    ```
+
 5. Link the secret to the **BROKERS** Service Account. The broker operator service account will will make sure that a volume is mounted credential in the pods under /etc/\<secret-name-from-aboe>-volume or in this case /etc/amq7brokersecret-volume
     AMQ Operaor 7.10 and below
     `oc secrets link sa/amq-broker-operator secret/amq7brokersecret`
