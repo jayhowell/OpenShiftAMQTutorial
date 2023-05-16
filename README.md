@@ -18,16 +18,14 @@ Description: This Doc will walk you through
     keytool -import -alias broker -keystore ~/client.ts -file ~/broker_cert.pem
     ```
 4. Create the secret. Notice that we are using the broker.ks for both the client and the broker certs. This is a single phase SSO where we only use the brokers cert. Client will validate the broker cert only. If you also want the broker to also validate the client, please refer to the AMQ docs on generating a cert for the client as well.
-<br>
-    ```
+```
     oc create secret generic amq7brokersecret --from-file=broker.ks=/home/jhowell/broker.ks --from-file=client.ts=/home/jhowell/broker.ks --from-literal=keyStorePassword=password --from-literal=trustStorePassword=password
-    ```
-
-    or if you already have a .crt and .key file created...
-
-    ```
+```
+or if you already have a .crt and .key file created...        
+```
     oc create secret tls amq7brokersecret --cert=</path/to/cert.crt> --key=</path/to/cert.key>
-    ```
+```
+    
 5. Link the secret to the **BROKERS** Service Account. The broker operator service account will will make sure that a volume is mounted credential in the pods under /etc/\<secret-name-from-aboe>-volume or in this case /etc/amq7brokersecret-volume
     AMQ Operaor 7.10 and below
 
@@ -101,6 +99,6 @@ ex-aao-ss-1                                      1/1     Running   0          21
     * 61616 is the port that we will test the internal implementation of Artimus using the Artimus consumer and producer utilities.
     * port 61616 is meant to be an internal element and is how broker to broker communications happen.
     * There is no default route created for this internal channel.
-    * There is a service called "\<broker-service-name>-hdls-svc" that is used internally and can route to any of the broker pods using a tagged Pod Selector. In this case our service is called "[ex-aao-hdls-svc](https://console-openshift-console.apps.cluster-kmtwq.kmtwq.sandbox2150.opentlc.com/k8s/ns/default/services/ex-aao-hdls-svc)"
+    * There is a service called "\<broker-service-name>-hdls-svc" that is used internally and can route to any of the broker pods using a Pod S. In this case our service is called "[ex-aao-hdls-svc](https://console-openshift-console.apps.cluster-kmtwq.kmtwq.sandbox2150.opentlc.com/k8s/ns/default/services/ex-aao-hdls-svc)"
     * The acceptor that we configured above is on port 5672 and automatically has an external route created for it. 
     * 
