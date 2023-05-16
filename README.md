@@ -120,10 +120,7 @@ Producer ActiveMQQueue[TEST], thread=0 Elapsed time in milli second : 3410 milli
   Check to make sure that the 1000 messages are actaully in the queue.
 ```
 /opt/amq/bin/artemis queue stat --url tcp://10.131.0.3:61616
-```
 
-  You should get the following
-```
 |NAME                     |ADDRESS                  |CONSUMER_COUNT|MESSAGE_COUNT|MESSAGES_ADDED|DELIVERING_COUNT|MESSAGES_ACKED|SCHEDULED_COUNT|ROUTING_TYPE|
 |$.artemis.internal.sf....|$.artemis.internal.sf....|1             |0            |0             |0               |0             |0              |MULTICAST   |
 |DLQ                      |DLQ                      |0             |0            |0             |0               |0             |0              |ANYCAST     |
@@ -132,3 +129,34 @@ Producer ActiveMQQueue[TEST], thread=0 Elapsed time in milli second : 3410 milli
 |activemq.management.6d...|activemq.management.6d...|1             |0            |0             |0               |0             |0              |MULTICAST   |
 |notif.19e35e81-f422-11...|activemq.notifications   |1             |0            |11            |0               |11            |0              |MULTICAST   |
 ```
+  You can see that the queue count for the TEST queue is 1000. 
+  You can then drain the queue with the following command.
+
+```
+/opt/amq/bin/artemis consumer --url tcp://10.131.0.3:61616 --user admin --password admin
+```
+
+10. Now Lets test the amqp protocol using the Attached source code.
+    1. Pull the source code down.
+    2. Find the route that was created when we exposed the acceptor on port 5672 in step 2 by executing..
+```
+oc get routes | grep amqp
+
+NAME                      HOST/PORT                                                                          PATH   SERVICES              PORT       TERMINATION        WILDCARD
+ex-aao-amqp-0-svc-rte     ex-aao-amqp-0-svc-rte-default.apps.cluster-kmtwq.kmtwq.sandbox2150.opentlc.com            ex-aao-amqp-0-svc     amqp-0     passthrough/None   None
+ex-aao-amqp-1-svc-rte     ex-aao-amqp-1-svc-rte-default.apps.cluster-kmtwq.kmtwq.sandbox2150.opentlc.com            ex-aao-amqp-1-svc     amqp-1     passthrough/None   None
+
+```
+The route here is `ex-aao-amqp-0-svc-rte-default.apps.cluster-kmtwq.kmtwq.sandbox2150.opentlc.com`
+
+Change the amqphub.amqp10jms.remote-url server url part in properties file in /amq-jms-client/src/main/resources/application.properties.  Also add any userid and password, while they are not required for the server, spring will throw an exception if they aren't there. 
+
+```
+amqphub.amqp10jms.remote-url=amqps://ex-aao-amqp-0-svc-rte-openshift-operators.apps.cluster-jplfz.jplfz.sandbox524.opentlc.com:443?transport.trustStoreLocation=/home/jhowell/client.ts&transport.trustStorePassword=password&transport.verifyHost=false
+amqphub.amqp10jms.username=admin
+amqphub.amqp10jms.password=admin
+```
+* Note: the userid and password aren't important here since we turned off user/password authentication in step 3 with `needClientAuth: false`
+* Very important that you use the correct path of the trust store file that you generated in step 3.
+* Very important that you use the same password you chose in step 3. 
+
