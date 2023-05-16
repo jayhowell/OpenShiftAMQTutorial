@@ -101,7 +101,7 @@ ex-aao-ss-1                                      1/1     Running   0          21
     * There is a service called "\<broker-service-name>-hdls-svc" that is used internally and can route to any of the broker pods using a Pod S. In this case our service is called "ex-aao-hdls-svc"
     * The acceptor that we configured above is on port 5672 and automatically has an external route created for it.
 
-1.  First lets test the builtin acceptor at port 61616 by remoting into a pod and testing it. Use one of the pod addresses we received above. We'll use pod 1 at 10.131.0.12
+9.  First lets test the builtin acceptor at port 61616 by remoting into a pod and testing it. Use one of the pod addresses we received above. We'll use pod 1 at 10.131.0.12
 ```
 oc rsh ex-aao-ss-0
 /opt/amq/bin/artemis producer --url tcp://10.131.0.12:61616 --user admin --password admin
