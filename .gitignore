@@ -1,0 +1,9 @@
+amq-jms-client/target/classes/application.properties
+amq-jms-client/target/classes/com/amq/jms/client/SpringbootAmqJmsClientApplication.class
+amq-jms-client/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+amq-jms-client/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+amq-jms-client/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst
+amq-jms-client/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
+amq-jms-client/target/surefire-reports/2023-05-16T16-47-34_200-jvmRun1.dump
+amq-jms-client/target/surefire-reports/2023-05-16T16-47-34_200-jvmRun1.dumpstream
+amq-jms-client/target/test-classes/com/amq/jms/client/SpringbootAmqJmsClientApplicationTests.class
