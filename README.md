@@ -146,7 +146,8 @@ You can then drain the queue with the following command.
 
 10. Now Lets test the amqp protocol using the Attached source code.
     1. Pull the source code down.
-    2. Find the route that was created when we exposed the acceptor on port 5672 in step 2 by executing..
+    2. Find the route that was automatically created by the operator when we exposed the acceptor in step 2 by executing.. I have a route here for each pod in the cluster.
+    3. If you go into these routes, you'll see that SSL is enabled and you have to get to these routes via port 443.
 
 ```
 oc get routes | grep amqp
