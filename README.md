@@ -175,6 +175,7 @@ amqphub.amqp10jms.password=admin
 run the following and see the following output from Spring.
 
 ```
+cd amq-jms-client
 mvn install
 mvn exec:java -Dexec.mainClass="com.amq.jms.client.SpringbootAmqJmsClientApplication"
 
